@@ -1,0 +1,18 @@
+{
+  "name": "1pass-secrets",
+  "description": "Secure secret management for Claude Code via 1Password CLI",
+  "owner": {
+    "name": "MacKinley Smith"
+  },
+  "plugins": [
+    {
+      "name": "1pass-secrets",
+      "description": "Secure secret management for Claude Code via 1Password CLI",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "MacKinley Smith"
+      }
+    }
+  ]
+}
