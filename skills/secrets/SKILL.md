@@ -21,7 +21,15 @@ Before using this skill, the user must have completed one-time setup:
 
 If any prerequisite is missing, walk the user through fixing it before proceeding.
 
-**Multi-account users:** If `op` reports "multiple accounts found", the user needs to set the `OP_ACCOUNT` environment variable in their shell profile (e.g., `export OP_ACCOUNT=myaccount.1password.com`). This avoids needing `--account` on every command.
+**Multi-account users:** If `op` reports "multiple accounts found", the user needs to set `OP_ACCOUNT` in their Claude Code settings (`~/.claude/settings.json`):
+```json
+{
+  "env": {
+    "OP_ACCOUNT": "myaccount.1password.com"
+  }
+}
+```
+Shell profile exports (`.zshrc`, `.bashrc`) may not carry through to Claude Code subprocesses. The `settings.json` `env` block is the reliable way to ensure `op` works in all tool calls.
 
 ## Actions
 
