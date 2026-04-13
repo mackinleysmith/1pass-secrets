@@ -12,6 +12,7 @@ Provides a `/secrets` slash command that lets Claude Code store, retrieve, and l
 - 1Password CLI: `brew install --cask 1password-cli`
 - Enable "Connect with 1Password CLI" in 1Password → Settings → Developer
 - Verify with: `op vault list`
+- **Multiple 1Password accounts?** Set `export OP_ACCOUNT=myaccount.1password.com` in your shell profile so `op` knows which account to use.
 
 ## One-time setup
 

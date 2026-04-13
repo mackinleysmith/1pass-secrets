@@ -21,6 +21,8 @@ Before using this skill, the user must have completed one-time setup:
 
 If any prerequisite is missing, walk the user through fixing it before proceeding.
 
+**Multi-account users:** If `op` reports "multiple accounts found", the user needs to set the `OP_ACCOUNT` environment variable in their shell profile (e.g., `export OP_ACCOUNT=myaccount.1password.com`). This avoids needing `--account` on every command.
+
 ## Actions
 
 Parse `$ARGUMENTS` to determine the action. The first word is the action, the rest is the item name.
