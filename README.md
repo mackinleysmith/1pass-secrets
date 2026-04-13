@@ -1,0 +1,70 @@
+# 1pass-secrets
+
+Secure secret management for Claude Code via 1Password CLI.
+
+## What this does
+
+Provides a `/secrets` slash command that lets Claude Code store, retrieve, and list secrets using the 1Password CLI (`op`). Secret values never enter the LLM conversation context — they're stored interactively with masked input and retrieved via inline command substitution.
+
+## Prerequisites
+
+- 1Password 8+ desktop app
+- 1Password CLI: `brew install --cask 1password-cli`
+- Enable "Connect with 1Password CLI" in 1Password → Settings → Developer
+- Verify with: `op vault list`
+
+## One-time setup
+
+Create a vault named `claude-code` in the 1Password app: Vaults → New Vault → name it `claude-code`.
+
+This vault is where all secrets managed by this plugin are stored.
+
+## Installation
+
+```
+claude plugin install github:mackinleysmith/1pass-secrets
+```
+
+## Usage
+
+**Store a secret:**
+
+```
+/secrets store homeassistant
+```
+
+Prompts you to enter a secret value with masked input. The value is written directly to 1Password and never passed through the LLM.
+
+**Use a secret in a command:**
+
+```
+/secrets use homeassistant
+```
+
+Retrieves the secret via inline command substitution (`$(op read ...)`) and injects it into a shell command. The value appears only in the subprocess environment, not in the conversation.
+
+**List available secrets:**
+
+```
+/secrets list
+```
+
+Shows all items stored in the `claude-code` vault by name. Values are not shown.
+
+## Security model
+
+- **Vault scoping by convention:** The agent only accesses `op://claude-code/...` paths. Secrets in other vaults are not referenced.
+- **Values never in LLM context:** During normal use, secret values are handled outside the conversation via command substitution or masked terminal input.
+- **Biometric auth:** 1Password desktop app handles authentication — a human must approve access via Touch ID or password before the CLI can read any secret.
+- **Auditable:** All 1Password CLI access is logged in the 1Password activity log.
+- **Plan compatibility:** Works with all 1Password plan types — Individual, Families, Teams, and Business.
+
+## Limitations
+
+- **Convention-enforced, not platform-enforced:** On Individual and Families plans, the `op` CLI technically has access to all vaults, not just `claude-code`. The scoping is enforced by how the skill is written, not by the platform. Teams and Business plans support service accounts, which can add platform-level vault restrictions.
+- **Prompt injection risk:** A sufficiently crafted prompt injection could theoretically instruct the agent to surface a secret value. The safety rules in this plugin mitigate but do not eliminate this risk.
+- **Requires desktop app:** The 1Password desktop app must be running and unlocked for CLI authentication to work.
+
+## License
+
+MIT
