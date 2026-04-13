@@ -1,0 +1,11 @@
+{
+  "name": "1pass-secrets",
+  "description": "Secure secret management for Claude Code via 1Password CLI",
+  "version": "1.0.0",
+  "author": {
+    "name": "MacKinley Smith"
+  },
+  "repository": "https://github.com/mackinleysmith/1pass-secrets",
+  "license": "MIT",
+  "keywords": ["1password", "secrets", "security", "op", "credentials"]
+}
