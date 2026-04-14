@@ -27,7 +27,7 @@ This vault is where all secrets managed by this plugin are stored.
 ## Installation
 
 ```bash
-claude plugin marketplace add github:mackinleysmith/1pass-secrets
+claude plugin marketplace add mackinleysmith/1pass-secrets
 claude plugin install 1pass-secrets
 ```
 
