@@ -1,0 +1,16 @@
+{
+  "description": "Auto-detect 1Password account on session start",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/setup-account.sh\"",
+            "timeout": 15000
+          }
+        ]
+      }
+    ]
+  }
+}
