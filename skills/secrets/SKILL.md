@@ -39,15 +39,23 @@ Parse `$ARGUMENTS` to determine the action. The first word is the action, the re
 
 Help the user store a secret WITHOUT the value ever appearing in conversation.
 
-**Option A (recommended):** Tell the user to run the following command via the `!` prefix. Construct it for them with the item name filled in:
+**Option A (recommended, macOS):** Run this directly as a Bash tool call. It pops up a native macOS password dialog — the user pastes the value into a masked field, clicks OK, and it goes straight to 1Password. The value is captured by command substitution and never printed to stdout.
+
+```bash
+VAL=$(osascript -e 'display dialog "Enter secret value for <item-name>:" default answer "" with hidden answer with title "1pass-secrets"' -e 'text returned of result') && op item create --category "API Credential" --title "<item-name>" --vault "claude-code" "credential=$VAL" && unset VAL && echo "Stored in 1Password!"
+```
+
+If the user clicks Cancel, `osascript` exits non-zero and the chain stops — nothing is stored.
+
+**Option B (fallback, any OS):** Tell the user to run the following command via the `!` prefix. Construct it for them with the item name filled in:
 
 ```bash
 ! read -s -p "Paste secret value: " VAL && op item create --category "API Credential" --title "<item-name>" --vault "claude-code" "credential=$VAL" && unset VAL && echo "Stored in 1Password!"
 ```
 
-This gives masked input — the value is never visible on screen or in conversation.
+This gives masked terminal input — the value is never visible on screen or in conversation. Use this when `osascript` is not available (Linux, remote sessions).
 
-**Option B:** Tell the user to open the 1Password desktop app, navigate to the `claude-code` vault, and create a new item:
+**Option C:** Tell the user to open the 1Password desktop app, navigate to the `claude-code` vault, and create a new item:
 - Category: API Credential
 - Title: `<item-name>`
 - Paste the value into the `credential` field
