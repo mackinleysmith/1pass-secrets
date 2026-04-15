@@ -13,6 +13,9 @@ if [ $# -ne 1 ] || [ -z "$1" ]; then
 fi
 
 item_name="$1"
+
+command -v op &>/dev/null || { echo "ERROR: op CLI not found. Install with: brew install --cask 1password-cli" >&2; exit 1; }
+
 hash=$(echo -n "$item_name" | shasum -a 256 | cut -d' ' -f1)
 cache_file="/tmp/.claude-secrets-${PPID}-${hash}"
 
@@ -23,12 +26,11 @@ if [ -s "$cache_file" ]; then
 fi
 
 # Fetch from 1Password, cache, and return
-if ! value=$(op read "op://claude-code/${item_name}/credential" 2>/dev/null); then
-  echo "ERROR: Failed to read '${item_name}' from 1Password. Is the app unlocked?" >&2
+if ! value=$(op read "op://claude-code/${item_name}/credential" 2>&1); then
+  echo "ERROR: Failed to read '${item_name}' from 1Password: ${value}" >&2
   rm -f "$cache_file"
   exit 1
 fi
 
-echo -n "$value" > "$cache_file"
-chmod 600 "$cache_file"
+( umask 177 && echo -n "$value" > "$cache_file" )
 echo -n "$value"
