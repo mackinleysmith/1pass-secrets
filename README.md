@@ -57,12 +57,24 @@ Retrieves the secret via inline command substitution (`$(op read ...)`) and inje
 
 Shows all items stored in the `claude-code` vault by name. Values are not shown.
 
+## Per-session caching
+
+The first time you use a secret in a session, 1Password prompts for biometric auth (Touch ID). After that, the secret value is cached locally for the remainder of the session — subsequent uses of the same secret skip the Touch ID prompt.
+
+- Each secret is approved individually on first use
+- Cache files are stored in `/tmp` with `chmod 600` permissions
+- Files are automatically deleted when the session ends
+- Stale cache files from crashed sessions are cleaned up on next session start
+
+No configuration needed — caching is automatic.
+
 ## Security model
 
 - **Vault scoping by convention:** The agent only accesses `op://claude-code/...` paths. Secrets in other vaults are not referenced.
 - **Values never in LLM context:** During normal use, secret values are handled outside the conversation via command substitution or masked terminal input.
 - **Biometric auth:** 1Password desktop app handles authentication — a human must approve access via Touch ID or password before the CLI can read any secret.
 - **Auditable:** All 1Password CLI access is logged in the 1Password activity log.
+- **Session cache:** Cached secret values are stored in `/tmp` with restrictive permissions (`chmod 600`) and hashed filenames. Files are cleaned up on session end and on next session start if a previous session crashed.
 - **Plan compatibility:** Works with all 1Password plan types — Individual, Families, Teams, and Business.
 
 ## Limitations
