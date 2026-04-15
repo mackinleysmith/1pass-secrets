@@ -69,22 +69,24 @@ IMPORTANT: The verification command checks existence only. NEVER print or surfac
 
 ### `use <item-name>`
 
-Explain that you will use the secret via inline command substitution. The retrieval pattern is:
+Explain that you will use the secret via inline command substitution with per-session caching. The first retrieval triggers a Touch ID prompt; subsequent uses within the same session are served from cache.
+
+The retrieval pattern is:
 
 ```bash
-$(op read "op://claude-code/<item-name>/credential")
+$("${CLAUDE_PLUGIN_ROOT}/bin/secret-cache.sh" "<item-name>")
 ```
 
 This MUST only appear inside a larger command — never standalone. Examples:
 
 **Single use:**
 ```bash
-curl -sS -H "Authorization: Bearer $(op read 'op://claude-code/<item-name>/credential')" https://api.example.com/endpoint
+curl -sS -H "Authorization: Bearer $("${CLAUDE_PLUGIN_ROOT}/bin/secret-cache.sh" "<item-name>")" https://api.example.com/endpoint
 ```
 
 **Multi-use in a pipeline:**
 ```bash
-TOKEN=$(op read "op://claude-code/<item-name>/credential") && \
+TOKEN=$("${CLAUDE_PLUGIN_ROOT}/bin/secret-cache.sh" "<item-name>") && \
   curl -sS -H "Authorization: Bearer $TOKEN" https://api.example.com/first && \
   curl -sS -H "Authorization: Bearer $TOKEN" https://api.example.com/second
 ```
