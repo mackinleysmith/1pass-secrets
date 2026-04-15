@@ -2,6 +2,15 @@
 # 1pass-secrets: auto-detect and configure OP_ACCOUNT on session start.
 # Runs silently if op is not installed or account is already configured.
 
+# Clean up stale cache files from crashed sessions
+for f in /tmp/.claude-secrets-*; do
+  [ -e "$f" ] || continue
+  pid=$(basename "$f" | sed 's/^\.claude-secrets-\([0-9]*\)-.*/\1/')
+  if [ -n "$pid" ] && ! kill -0 "$pid" 2>/dev/null; then
+    rm -f "$f"
+  fi
+done
+
 # Already configured — nothing to do
 [ -n "$OP_ACCOUNT" ] && exit 0
 
