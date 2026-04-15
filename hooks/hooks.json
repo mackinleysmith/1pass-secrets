@@ -1,5 +1,5 @@
 {
-  "description": "Auto-detect 1Password account on session start",
+  "description": "Auto-detect 1Password account on session start; clean up cached secrets on session end",
   "hooks": {
     "SessionStart": [
       {
@@ -8,6 +8,17 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/setup-account.sh\"",
             "timeout": 15000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/cleanup-cache.sh\"",
+            "timeout": 5000
           }
         ]
       }
