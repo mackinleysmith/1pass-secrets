@@ -47,7 +47,7 @@ Prompts you to enter a secret value with masked input. The value is written dire
 /secrets use homeassistant
 ```
 
-Retrieves the secret via inline command substitution (`$(op read ...)`) and injects it into a shell command. The value appears only in the subprocess environment, not in the conversation.
+Retrieves the secret via inline command substitution and injects it into a shell command. The value is cached for the session after the first retrieval. The value appears only in the subprocess environment, not in the conversation.
 
 **List available secrets:**
 
