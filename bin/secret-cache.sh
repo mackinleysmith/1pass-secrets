@@ -16,8 +16,10 @@ item_name="$1"
 
 command -v op &>/dev/null || { echo "ERROR: op CLI not found. Install with: brew install --cask 1password-cli" >&2; exit 1; }
 
+# Resolve the Claude Code process PID (grandparent: Claude Code → shell → this script)
+session_pid=$(ps -o ppid= -p $PPID | tr -d ' ')
 hash=$(echo -n "$item_name" | shasum -a 256 | cut -d' ' -f1)
-cache_file="/tmp/.claude-secrets-${PPID}-${hash}"
+cache_file="/tmp/.claude-secrets-${session_pid}-${hash}"
 
 # Return cached value if available
 if [ -s "$cache_file" ]; then
