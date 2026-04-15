@@ -76,7 +76,7 @@ Add a `Stop` entry alongside the existing `SessionStart`, pointing to `cleanup-c
 ### `hooks/setup-account.sh` update (stale sweep)
 
 Before the existing account detection logic, add a sweep:
-- For each file matching `/tmp/.claude-secrets-*`, extract the PID from the filename.
+- For each file matching `/tmp/.claude-secrets-*`, extract the PID segment from the filename (the portion between the second and third `-`, e.g., `20995` from `.claude-secrets-20995-a1b2c3...`).
 - Check if that PID is still alive (`kill -0 $pid 2>/dev/null`).
 - Delete the file if the process is gone.
 
