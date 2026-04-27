@@ -16,9 +16,22 @@ item_name="$1"
 
 command -v op &>/dev/null || { echo "ERROR: op CLI not found. Install with: brew install --cask 1password-cli" >&2; exit 1; }
 
-# Resolve the Claude Code process PID (grandparent: Claude Code → shell → this script)
-session_pid=$(ps -o ppid= -p $PPID 2>/dev/null | tr -d ' ')
+# Walk up the process tree to find the Claude Code ancestor's PID — this is
+# stable for the session regardless of whether an intermediate shell sits
+# between us and `claude`. PPID alone is unreliable: in some sessions PPID
+# is the shell, in others it's claude directly.
+session_pid=""
+pid=$PPID
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+  [ -z "$pid" ] || [ "$pid" -le 1 ] && break
+  if [ "$(ps -o comm= -p "$pid" 2>/dev/null)" = "claude" ]; then
+    session_pid=$pid
+    break
+  fi
+  pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+done
 [ -z "$session_pid" ] && session_pid=$PPID
+
 hash=$(echo -n "$item_name" | shasum -a 256 | cut -d' ' -f1)
 cache_file="/tmp/.claude-secrets-${session_pid}-${hash}"
 

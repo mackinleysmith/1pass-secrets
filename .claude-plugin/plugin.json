@@ -1,7 +1,7 @@
 {
   "name": "1pass-secrets",
   "description": "Secure secret management for Claude Code via 1Password CLI",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": {
     "name": "MacKinley Smith"
   },
